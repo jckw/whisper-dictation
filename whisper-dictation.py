@@ -226,9 +226,9 @@ def parse_args():
         "-t",
         "--max_time",
         type=float,
-        default=30,
+        default=None,
         help="Specify the maximum recording time in seconds. The app will automatically stop recording after this duration. "
-        "Default: 30 seconds.",
+        "Default: None.",
     )
     parser.add_argument(
         "-d",
