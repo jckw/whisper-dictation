@@ -5,25 +5,25 @@ import pyaudio
 import numpy as np
 import rumps
 from pynput import keyboard
-from whisper import load_model
+from faster_whisper import WhisperModel
 import platform
 
 
 class SpeechTranscriber:
-    def __init__(self, model):
+    def __init__(self, model: WhisperModel):
         self.model = model
         self.pykeyboard = keyboard.Controller()
 
     def transcribe(self, audio_data, language=None):
-        result = self.model.transcribe(audio_data, language=language)
+        segments, _ = self.model.transcribe(audio_data, language=language)
         is_first = True
-        for element in result["text"]:
-            if is_first and element == " ":
+        for seg in segments:
+            if is_first and seg.text == " ":
                 is_first = False
                 continue
 
             try:
-                self.pykeyboard.type(element)
+                self.pykeyboard.type(seg.text)
                 time.sleep(0.0025)
             except:
                 pass
@@ -230,6 +230,14 @@ def parse_args():
         help="Specify the maximum recording time in seconds. The app will automatically stop recording after this duration. "
         "Default: 30 seconds.",
     )
+    parser.add_argument(
+        "-d",
+        "--device",
+        type=str,
+        default="cpu",
+        choices=["cpu", "cuda"],
+        help="Specify the device to run the model on. Options: cpu, cuda. Default: cpu.",
+    )
 
     args = parser.parse_args()
 
@@ -253,7 +261,7 @@ if __name__ == "__main__":
 
     print("Loading model...")
     model_name = args.model_name
-    model = load_model(model_name)
+    model = WhisperModel(model_name, device=args.device)
     print(f"{model_name} model loaded")
 
     transcriber = SpeechTranscriber(model)

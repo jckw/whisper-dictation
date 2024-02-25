@@ -7,12 +7,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-openai-whisper = { git = "https://github.com/openai/whisper.git", rev = "0a60fcaa9b86748389a656aa013c416030287d47" }
 pyaudio = "^0.2.14"
 pynput = "^1.7.6"
 argparse = "^1.4.0"
 rumps = "^0.4.0"
 numpy = "^1.26.4"
+faster-whisper = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.2.0"
